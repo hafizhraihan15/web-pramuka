@@ -6,7 +6,8 @@ import { useToast } from "../components/ToastContext";
 const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(
   window.location.hostname,
 );
-const API_URL = isLocalhost ? "http://localhost:8000/api" : "/api";
+const API_BASE_URL = isLocalhost ? "http://localhost:8001" : "";
+const API_URL = `${API_BASE_URL}/api`;
 
 type MemberStatus = "pending" | "accepted" | "rejected";
 type AttendanceStatus = "Hadir" | "Izin" | "Alpha";
@@ -69,6 +70,7 @@ interface ProgramRegistration {
   program_id: number;
   program_title?: string;
   status: MemberStatus;
+  certificate_approved?: boolean;
   registered_at: string;
 }
 
@@ -165,7 +167,9 @@ export const Admin: React.FC = () => {
   });
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [announcementEditingId, setAnnouncementEditingId] = useState<number | null>(null);
+  const [announcementEditingId, setAnnouncementEditingId] = useState<
+    number | null
+  >(null);
   const [announcementForm, setAnnouncementForm] = useState({
     title: "",
     content: "",
@@ -217,17 +221,16 @@ export const Admin: React.FC = () => {
           galleryRes,
           announcementsRes,
           messagesRes,
-        ] =
-          await Promise.all([
-            axios.get(`${API_URL}/members/`, headers),
-            axios.get(`${API_URL}/programs/all`, headers),
-            axios.get(`${API_URL}/attendance/`, headers),
-            axios.get(`${API_URL}/letters/`, headers),
-            axios.get(`${API_URL}/programs/registrations/all`, headers),
-            axios.get(`${API_URL}/gallery/?limit=100`),
-            axios.get(`${API_URL}/announcements/all`, headers),
-            axios.get(`${API_URL}/messages/`, headers),
-          ]);
+        ] = await Promise.all([
+          axios.get(`${API_URL}/members/`, headers),
+          axios.get(`${API_URL}/programs/all`, headers),
+          axios.get(`${API_URL}/attendance/`, headers),
+          axios.get(`${API_URL}/letters/`, headers),
+          axios.get(`${API_URL}/programs/registrations/all`, headers),
+          axios.get(`${API_URL}/gallery/?limit=100`),
+          axios.get(`${API_URL}/announcements/all`, headers),
+          axios.get(`${API_URL}/messages/`, headers),
+        ]);
         setMembers(membersRes.data);
         setPrograms(programsRes.data);
         setAttendance(attendanceRes.data);
@@ -282,15 +285,37 @@ export const Admin: React.FC = () => {
     });
   };
 
-  const updateProgramRegistration = async (id: number, status: MemberStatus) => {
+  const updateProgramRegistration = async (
+    id: number,
+    status: MemberStatus,
+  ) => {
     await runAction(`program-registration-${id}-${status}`, async () => {
-      await axios.patch(`${API_URL}/programs/registrations/${id}`, { status }, headers);
+      await axios.patch(
+        `${API_URL}/programs/registrations/${id}`,
+        { status },
+        headers,
+      );
       showToast("Status pendaftaran kegiatan diperbarui.", "success");
       await loadData();
     });
   };
 
-  const updateLetterStatus = async (id: number, status: "Pending" | "Selesai") => {
+  const approveProgramCertificate = async (id: number) => {
+    await runAction(`program-certificate-${id}`, async () => {
+      await axios.patch(
+        `${API_URL}/programs/registrations/${id}/certificate`,
+        {},
+        headers,
+      );
+      showToast("Sertifikat kegiatan disetujui.", "success");
+      await loadData();
+    });
+  };
+
+  const updateLetterStatus = async (
+    id: number,
+    status: "Pending" | "Selesai",
+  ) => {
     await runAction(`letter-${id}-${status}`, async () => {
       await axios.put(`${API_URL}/letters/${id}`, null, {
         ...headers,
@@ -333,8 +358,15 @@ export const Admin: React.FC = () => {
   const registerProgram = async (programId: number) => {
     if (!memberId) return;
     await runAction(`member-program-${programId}`, async () => {
-      await axios.post(`${API_URL}/programs/${programId}/register/${memberId}`, {}, headers);
-      showToast("Pendaftaran kegiatan dikirim dan menunggu persetujuan admin.", "success");
+      await axios.post(
+        `${API_URL}/programs/${programId}/register/${memberId}`,
+        {},
+        headers,
+      );
+      showToast(
+        "Pendaftaran kegiatan dikirim dan menunggu persetujuan admin.",
+        "success",
+      );
       await loadData();
     });
   };
@@ -360,7 +392,8 @@ export const Admin: React.FC = () => {
       const form = new FormData();
       form.append("title", galleryForm.title);
       form.append("category", galleryForm.category);
-      if (galleryForm.description) form.append("description", galleryForm.description);
+      if (galleryForm.description)
+        form.append("description", galleryForm.description);
       form.append("photo", galleryForm.photo as File);
       await axios.post(`${API_URL}/gallery/`, form, {
         headers: {
@@ -393,9 +426,14 @@ export const Admin: React.FC = () => {
       const form = new FormData();
       form.append("title", announcementForm.title);
       form.append("content", announcementForm.content);
-      if (announcementForm.image_url) form.append("image_url", announcementForm.image_url);
-      if (announcementForm.link_url) form.append("link_url", announcementForm.link_url);
-      form.append("link_label", announcementForm.link_label || "Daftar Sekarang");
+      if (announcementForm.image_url)
+        form.append("image_url", announcementForm.image_url);
+      if (announcementForm.link_url)
+        form.append("link_url", announcementForm.link_url);
+      form.append(
+        "link_label",
+        announcementForm.link_label || "Daftar Sekarang",
+      );
       form.append("is_active", String(announcementForm.is_active));
       if (announcementForm.photo) form.append("photo", announcementForm.photo);
       const config = {
@@ -405,7 +443,11 @@ export const Admin: React.FC = () => {
         },
       };
       if (announcementEditingId) {
-        await axios.put(`${API_URL}/announcements/${announcementEditingId}/upload`, form, config);
+        await axios.put(
+          `${API_URL}/announcements/${announcementEditingId}/upload`,
+          form,
+          config,
+        );
         showToast("Berita berhasil diperbarui.", "success");
       } else {
         await axios.post(`${API_URL}/announcements/upload`, form, config);
@@ -494,17 +536,24 @@ export const Admin: React.FC = () => {
     try {
       await action();
     } catch (err: any) {
-      showToast(err.response?.data?.detail || err.message || "Aksi gagal dijalankan", "error");
+      showToast(
+        err.response?.data?.detail || err.message || "Aksi gagal dijalankan",
+        "error",
+      );
     } finally {
       setActionBusy(null);
     }
   };
 
-  const pendingMembers = members.filter((member) => member.status === "pending");
+  const pendingMembers = members.filter(
+    (member) => member.status === "pending",
+  );
   const pendingRegistrations = programRegistrations.filter(
     (registration) => registration.status === "pending",
   );
-  const pendingLetters = letters.filter((letter) => letter.status === "Pending");
+  const pendingLetters = letters.filter(
+    (letter) => letter.status === "Pending",
+  );
 
   const navItems: Array<{ id: Panel; label: string }> = isAdmin
     ? [
@@ -552,7 +601,9 @@ export const Admin: React.FC = () => {
           <div style={{ fontWeight: 900, fontSize: "1rem" }}>
             {isAdmin ? "DEWAN AMBALAN" : "WARGA AMBALAN"}
           </div>
-          <div style={{ color: "#9fb0c3", fontSize: "0.82rem", marginTop: "6px" }}>
+          <div
+            style={{ color: "#9fb0c3", fontSize: "0.82rem", marginTop: "6px" }}
+          >
             {isAdmin ? userEmail : memberInfo?.name || userEmail}
           </div>
         </div>
@@ -629,7 +680,9 @@ export const Admin: React.FC = () => {
           }}
         >
           <div>
-            <div style={{ color: "#64748b", fontWeight: 800, fontSize: "0.8rem" }}>
+            <div
+              style={{ color: "#64748b", fontWeight: 800, fontSize: "0.8rem" }}
+            >
               PRAMUKA MAN 1 INHIL
             </div>
             <h1
@@ -642,7 +695,9 @@ export const Admin: React.FC = () => {
               {isAdmin ? "Dashboard Admin" : "Dashboard Member"}
             </h1>
           </div>
-          {loading && <span style={{ color: "#64748b", fontWeight: 700 }}>Memuat...</span>}
+          {loading && (
+            <span style={{ color: "#64748b", fontWeight: 700 }}>Memuat...</span>
+          )}
         </header>
 
         {activePanel === "overview" && (
@@ -663,21 +718,38 @@ export const Admin: React.FC = () => {
                     ["Surat Pending", pendingLetters.length],
                     ["Total Anggota", members.length],
                     ["Foto Galeri", gallery.length],
-                    ["Berita Aktif", announcements.filter((item) => item.is_active).length],
-                    ["Pesan Baru", messages.filter((item) => !item.is_read).length],
+                    [
+                      "Berita Aktif",
+                      announcements.filter((item) => item.is_active).length,
+                    ],
+                    [
+                      "Pesan Baru",
+                      messages.filter((item) => !item.is_read).length,
+                    ],
                   ]
                 : [
                     [
                       "Program Diikuti",
-                      programRegistrations.filter((item) => item.status === "accepted").length,
+                      programRegistrations.filter(
+                        (item) => item.status === "accepted",
+                      ).length,
                     ],
                     ["Riwayat Absensi", attendance.length],
                     ["Pengajuan Surat", letters.length],
                     ["Status", memberInfo?.status || "-"],
                   ]
               ).map(([label, value]) => (
-                <div key={label} style={{ ...cardStyle, padding: isMobile ? "14px" : "22px" }}>
-                  <div style={{ color: "#64748b", fontWeight: 800, fontSize: "0.82rem" }}>
+                <div
+                  key={label}
+                  style={{ ...cardStyle, padding: isMobile ? "14px" : "22px" }}
+                >
+                  <div
+                    style={{
+                      color: "#64748b",
+                      fontWeight: 800,
+                      fontSize: "0.82rem",
+                    }}
+                  >
                     {label}
                   </div>
                   <div
@@ -697,7 +769,10 @@ export const Admin: React.FC = () => {
         )}
 
         {activePanel === "members" && isAdmin && (
-          <AdminMembers members={members} updateMemberStatus={updateMemberStatus} />
+          <AdminMembers
+            members={members}
+            updateMemberStatus={updateMemberStatus}
+          />
         )}
 
         {activePanel === "programs" &&
@@ -705,11 +780,13 @@ export const Admin: React.FC = () => {
             <AdminPrograms
               registrations={programRegistrations}
               updateProgramRegistration={updateProgramRegistration}
+              approveProgramCertificate={approveProgramCertificate}
             />
           ) : (
             <MemberPrograms
               programs={programs}
               registrations={programRegistrations}
+              memberName={memberInfo?.name || userEmail}
               registerProgram={registerProgram}
               actionBusy={actionBusy}
             />
@@ -736,7 +813,10 @@ export const Admin: React.FC = () => {
 
         {activePanel === "letters" &&
           (isAdmin ? (
-            <AdminLetters letters={letters} updateLetterStatus={updateLetterStatus} />
+            <AdminLetters
+              letters={letters}
+              updateLetterStatus={updateLetterStatus}
+            />
           ) : (
             <MemberLetters
               letters={letters}
@@ -817,7 +897,13 @@ function AdminMembers({
       empty="Belum ada pendaftar."
       render={(member) => (
         <div style={{ ...cardStyle, padding: "18px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "12px",
+            }}
+          >
             <strong>{member.name}</strong>
             <Badge status={member.status} />
           </div>
@@ -828,8 +914,20 @@ function AdminMembers({
             {member.motivation || "Tidak ada motivasi tertulis."}
           </p>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            <ActionButton label="Terima" tone="success" onClick={() => updateMemberStatus(member.id, "accepted")} />
-            <ActionButton label="Tolak" tone="danger" onClick={() => updateMemberStatus(member.id, "rejected")} />
+            {member.status !== "accepted" && (
+              <ActionButton
+                label="Terima"
+                tone="success"
+                onClick={() => updateMemberStatus(member.id, "accepted")}
+              />
+            )}
+            {member.status !== "rejected" && (
+              <ActionButton
+                label="Tolak"
+                tone="danger"
+                onClick={() => updateMemberStatus(member.id, "rejected")}
+              />
+            )}
           </div>
         </div>
       )}
@@ -840,9 +938,11 @@ function AdminMembers({
 function AdminPrograms({
   registrations,
   updateProgramRegistration,
+  approveProgramCertificate,
 }: {
   registrations: ProgramRegistration[];
   updateProgramRegistration: (id: number, status: MemberStatus) => void;
+  approveProgramCertificate: (id: number) => void;
 }) {
   return (
     <GridList
@@ -850,16 +950,58 @@ function AdminPrograms({
       empty="Belum ada pendaftaran kegiatan."
       render={(registration) => (
         <div style={{ ...cardStyle, padding: "18px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "12px",
+            }}
+          >
             <strong>{registration.program_title}</strong>
             <Badge status={registration.status} />
           </div>
           <p style={{ color: "#64748b", margin: "8px 0 14px" }}>
             {registration.member_name} · {registration.member_class}
           </p>
+          <p
+            style={{
+              color: "#64748b",
+              margin: "0 0 14px",
+              fontSize: "0.86rem",
+            }}
+          >
+            Sertifikat:{" "}
+            {registration.certificate_approved
+              ? "Sudah disetujui"
+              : "Belum tersedia"}
+          </p>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            <ActionButton label="Terima" tone="success" onClick={() => updateProgramRegistration(registration.id, "accepted")} />
-            <ActionButton label="Tolak" tone="danger" onClick={() => updateProgramRegistration(registration.id, "rejected")} />
+            {registration.status !== "accepted" && (
+              <ActionButton
+                label="Terima"
+                tone="success"
+                onClick={() =>
+                  updateProgramRegistration(registration.id, "accepted")
+                }
+              />
+            )}
+            {registration.status !== "rejected" && (
+              <ActionButton
+                label="Tolak"
+                tone="danger"
+                onClick={() =>
+                  updateProgramRegistration(registration.id, "rejected")
+                }
+              />
+            )}
+            {registration.status === "accepted" &&
+              !registration.certificate_approved && (
+                <ActionButton
+                  label="Selesai & ACC Sertifikat"
+                  tone="primary"
+                  onClick={() => approveProgramCertificate(registration.id)}
+                />
+              )}
           </div>
         </div>
       )}
@@ -878,8 +1020,22 @@ function AdminAttendance(props: {
 }) {
   return (
     <div style={{ display: "grid", gap: "16px" }}>
-      <form onSubmit={props.addAttendance} style={{ ...cardStyle, padding: "18px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <select value={props.selectedMemberId} onChange={(e) => props.setSelectedMemberId(e.target.value)} required style={fieldStyle}>
+      <form
+        onSubmit={props.addAttendance}
+        style={{
+          ...cardStyle,
+          padding: "18px",
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+        }}
+      >
+        <select
+          value={props.selectedMemberId}
+          onChange={(e) => props.setSelectedMemberId(e.target.value)}
+          required
+          style={fieldStyle}
+        >
           <option value="">Pilih anggota</option>
           {props.members.map((member) => (
             <option key={member.id} value={member.id}>
@@ -887,7 +1043,13 @@ function AdminAttendance(props: {
             </option>
           ))}
         </select>
-        <select value={props.attendanceStatus} onChange={(e) => props.setAttendanceStatus(e.target.value as AttendanceStatus)} style={fieldStyle}>
+        <select
+          value={props.attendanceStatus}
+          onChange={(e) =>
+            props.setAttendanceStatus(e.target.value as AttendanceStatus)
+          }
+          style={fieldStyle}
+        >
           <option value="Hadir">Hadir</option>
           <option value="Izin">Izin</option>
           <option value="Alpha">Alpha</option>
@@ -898,11 +1060,20 @@ function AdminAttendance(props: {
         items={props.attendance}
         empty="Belum ada absensi."
         render={(item) => (
-          <div style={{ ...cardStyle, padding: "16px", display: "flex", justifyContent: "space-between", gap: "12px" }}>
+          <div
+            style={{
+              ...cardStyle,
+              padding: "16px",
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "12px",
+            }}
+          >
             <div>
               <strong>{item.member_name || `Member ${item.member_id}`}</strong>
               <div style={{ color: "#64748b", marginTop: "4px" }}>
-                {new Date(item.attendance_date).toLocaleDateString("id-ID")} · {item.member_class || "-"}
+                {new Date(item.attendance_date).toLocaleDateString("id-ID")} ·{" "}
+                {item.member_class || "-"}
               </div>
             </div>
             <Badge status={item.status} />
@@ -926,16 +1097,29 @@ function AdminLetters({
       empty="Belum ada pengajuan surat."
       render={(letter) => (
         <div style={{ ...cardStyle, padding: "18px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "12px",
+            }}
+          >
             <strong>{letter.letter_type}</strong>
             <Badge status={letter.status} />
           </div>
-          <p style={{ color: "#64748b", margin: "8px 0" }}>Member ID {letter.member_id}</p>
+          <p style={{ color: "#64748b", margin: "8px 0" }}>
+            Member ID {letter.member_id}
+          </p>
           <p style={{ margin: "0 0 14px" }}>{letter.purpose}</p>
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            <ActionButton label="Tandai Pending" tone="neutral" onClick={() => updateLetterStatus(letter.id, "Pending")} />
-            <ActionButton label="Selesai" tone="success" onClick={() => updateLetterStatus(letter.id, "Selesai")} />
-          </div>
+          {letter.status === "Pending" && (
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <ActionButton
+                label="Selesai"
+                tone="success"
+                onClick={() => updateLetterStatus(letter.id, "Selesai")}
+              />
+            </div>
+          )}
         </div>
       )}
     />
@@ -986,7 +1170,9 @@ function AdminGallery({
           <label style={adminLabelStyle}>Judul Foto</label>
           <input
             value={galleryForm.title}
-            onChange={(e) => setGalleryForm({ ...galleryForm, title: e.target.value })}
+            onChange={(e) =>
+              setGalleryForm({ ...galleryForm, title: e.target.value })
+            }
             placeholder="Latihan Mingguan"
             required
             style={{ ...fieldStyle, width: "100%" }}
@@ -996,7 +1182,9 @@ function AdminGallery({
           <label style={adminLabelStyle}>Kategori</label>
           <select
             value={galleryForm.category}
-            onChange={(e) => setGalleryForm({ ...galleryForm, category: e.target.value })}
+            onChange={(e) =>
+              setGalleryForm({ ...galleryForm, category: e.target.value })
+            }
             style={{ ...fieldStyle, width: "100%" }}
           >
             <option value="Kegiatan">Kegiatan</option>
@@ -1061,9 +1249,21 @@ function AdminGallery({
                 }}
               />
               <div style={{ padding: "14px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "10px",
+                  }}
+                >
                   <strong>{item.title}</strong>
-                  <span style={{ color: "#64748b", fontSize: "0.82rem", fontWeight: 800 }}>
+                  <span
+                    style={{
+                      color: "#64748b",
+                      fontSize: "0.82rem",
+                      fontWeight: 800,
+                    }}
+                  >
                     {item.category}
                   </span>
                 </div>
@@ -1146,7 +1346,10 @@ function AdminNews({
             <input
               value={announcementForm.title}
               onChange={(e) =>
-                setAnnouncementForm({ ...announcementForm, title: e.target.value })
+                setAnnouncementForm({
+                  ...announcementForm,
+                  title: e.target.value,
+                })
               }
               placeholder="Judul pengumuman"
               required
@@ -1158,7 +1361,10 @@ function AdminNews({
             <input
               value={announcementForm.image_url}
               onChange={(e) =>
-                setAnnouncementForm({ ...announcementForm, image_url: e.target.value })
+                setAnnouncementForm({
+                  ...announcementForm,
+                  image_url: e.target.value,
+                })
               }
               placeholder="Opsional, bisa /uploads/gallery/..."
               style={{ ...fieldStyle, width: "100%" }}
@@ -1183,7 +1389,10 @@ function AdminNews({
             <input
               value={announcementForm.link_url}
               onChange={(e) =>
-                setAnnouncementForm({ ...announcementForm, link_url: e.target.value })
+                setAnnouncementForm({
+                  ...announcementForm,
+                  link_url: e.target.value,
+                })
               }
               placeholder="Opsional"
               style={{ ...fieldStyle, width: "100%" }}
@@ -1194,7 +1403,10 @@ function AdminNews({
             <input
               value={announcementForm.link_label}
               onChange={(e) =>
-                setAnnouncementForm({ ...announcementForm, link_label: e.target.value })
+                setAnnouncementForm({
+                  ...announcementForm,
+                  link_label: e.target.value,
+                })
               }
               placeholder="Daftar Sekarang"
               style={{ ...fieldStyle, width: "100%" }}
@@ -1206,7 +1418,10 @@ function AdminNews({
           <textarea
             value={announcementForm.content}
             onChange={(e) =>
-              setAnnouncementForm({ ...announcementForm, content: e.target.value })
+              setAnnouncementForm({
+                ...announcementForm,
+                content: e.target.value,
+              })
             }
             placeholder="Tulis isi pengumuman atau berita..."
             required
@@ -1281,7 +1496,13 @@ function AdminNews({
                   }}
                 />
               )}
-              <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "10px",
+                }}
+              >
                 <strong>{item.title}</strong>
                 <Badge status={item.is_active ? "Selesai" : "Pending"} />
               </div>
@@ -1289,7 +1510,11 @@ function AdminNews({
                 {item.content}
               </p>
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                <ActionButton label="Edit" tone="neutral" onClick={() => editAnnouncement(item)} />
+                <ActionButton
+                  label="Edit"
+                  tone="neutral"
+                  onClick={() => editAnnouncement(item)}
+                />
                 <ActionButton
                   label={item.is_active ? "Nonaktifkan" : "Aktifkan"}
                   tone="primary"
@@ -1329,7 +1554,14 @@ function AdminMessages({
         items={messages}
         empty="Belum ada pesan dari halaman kontak."
         render={(message) => (
-          <div style={{ ...cardStyle, padding: "18px", display: "grid", gap: "10px" }}>
+          <div
+            style={{
+              ...cardStyle,
+              padding: "18px",
+              display: "grid",
+              gap: "10px",
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -1341,7 +1573,9 @@ function AdminMessages({
             >
               <div>
                 <strong>{message.name}</strong>
-                <div style={{ color: "#64748b", fontSize: "0.86rem" }}>{message.email}</div>
+                <div style={{ color: "#64748b", fontSize: "0.86rem" }}>
+                  {message.email}
+                </div>
               </div>
               <Badge status={message.is_read ? "Selesai" : "Pending"} />
             </div>
@@ -1349,7 +1583,13 @@ function AdminMessages({
               <div style={{ color: "#102033", fontWeight: 900 }}>
                 {message.subject || "Tanpa subjek"}
               </div>
-              <p style={{ color: "#475569", margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
+              <p
+                style={{
+                  color: "#475569",
+                  margin: "8px 0 0",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
                 {message.message}
               </p>
             </div>
@@ -1360,7 +1600,9 @@ function AdminMessages({
               {!message.is_read && (
                 <ActionButton
                   label={
-                    actionBusy === `message-read-${message.id}` ? "Memproses..." : "Tandai Dibaca"
+                    actionBusy === `message-read-${message.id}`
+                      ? "Memproses..."
+                      : "Tandai Dibaca"
                   }
                   tone="success"
                   onClick={() => markMessageRead(message.id)}
@@ -1381,7 +1623,11 @@ function AdminMessages({
                 Balas Email
               </a>
               <ActionButton
-                label={actionBusy === `message-delete-${message.id}` ? "Menghapus..." : "Hapus"}
+                label={
+                  actionBusy === `message-delete-${message.id}`
+                    ? "Menghapus..."
+                    : "Hapus"
+                }
                 tone="danger"
                 onClick={() => deleteMessage(message.id)}
                 disabled={actionBusy === `message-delete-${message.id}`}
@@ -1397,20 +1643,192 @@ function AdminMessages({
 function MemberPrograms({
   programs,
   registrations,
+  memberName,
   registerProgram,
   actionBusy,
 }: {
   programs: Program[];
   registrations: ProgramRegistration[];
+  memberName: string;
   registerProgram: (programId: number) => void;
   actionBusy: string | null;
 }) {
+  const openCertificate = (
+    program: Program,
+    registration?: ProgramRegistration,
+  ) => {
+    if (
+      !registration ||
+      registration.status !== "accepted" ||
+      !registration.certificate_approved
+    )
+      return;
+    const issuedDate = new Date().toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    const registeredDate = new Date(
+      registration.registered_at,
+    ).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    const certificateWindow = window.open(
+      "",
+      "_blank",
+      "width=1120,height=780",
+    );
+    if (!certificateWindow) return;
+    certificateWindow.document.write(`
+      <!doctype html>
+      <html lang="id">
+        <head>
+          <meta charset="utf-8" />
+          <title>Sertifikat ${program.title}</title>
+          <style>
+            @page { size: A4 landscape; margin: 0; }
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              min-height: 100vh;
+              display: grid;
+              place-items: center;
+              background: #e5e7eb;
+              font-family: Georgia, 'Times New Roman', serif;
+              color: #102033;
+            }
+            .certificate {
+              width: 297mm;
+              height: 210mm;
+              padding: 18mm;
+              background: url('/img/sertifikat.jpg') center/cover no-repeat;;
+              border: 8px solid #102033;
+              outline: 4px solid #f6c945;
+              outline-offset: -18px;
+              display: grid;
+              place-items: center;
+              text-align: center;
+              position: relative;
+            }
+            .badge {
+              font-family: Arial, sans-serif;
+              letter-spacing: .18em;
+              color: #c9a800;
+              font-weight: 800;
+              font-size: 12px;
+              text-transform: uppercase;
+            }
+            h1 {
+              margin: 14px 0 4px;
+              font-size: 50px;
+              letter-spacing: .08em;
+              text-transform: uppercase;
+            }
+            .subtitle {
+              font-family: Arial, sans-serif;
+              font-size: 15px;
+              color: #475569;
+            }
+            .name {
+              margin: 28px auto 10px;
+              padding-bottom: 8px;
+              max-width: 720px;
+              border-bottom: 2px solid #c9a800;
+              font-size: 42px;
+              font-weight: 700;
+              color: #001220;
+            }
+            .body {
+              max-width: 780px;
+              margin: 14px auto 0;
+              font-family: Arial, sans-serif;
+              font-size: 18px;
+              line-height: 1.7;
+              color: #334155;
+            }
+            .program {
+              color: #102033;
+              font-weight: 800;
+            }
+            .footer {
+              width: 100%;
+              margin-top: 44px;
+              display: flex;
+              justify-content: space-between;
+              gap: 32px;
+              font-family: Arial, sans-serif;
+              color: #475569;
+              font-size: 14px;
+            }
+            .signature {
+              min-width: 240px;
+              padding-top: 58px;
+              border-bottom: 1px solid #102033;
+              color: #102033;
+              font-weight: 700;
+            }
+            .print {
+              position: fixed;
+              right: 18px;
+              top: 18px;
+              padding: 10px 16px;
+              border: 0;
+              border-radius: 8px;
+              background: #102033;
+              color: white;
+              font-weight: 800;
+              cursor: pointer;
+            }
+            @media print {
+              body { background: white; }
+              .print { display: none; }
+              .certificate { box-shadow: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <button class="print" onclick="window.print()">Cetak / Simpan PDF</button>
+          <main class="certificate">
+            <section>
+              <div class="badge">Pramuka MAN 1 Indragiri Hilir</div>
+              <h1>Sertifikat</h1>
+              <div class="subtitle">Diberikan kepada</div>
+              <div class="name">${escapeHtml(memberName)}</div>
+              <div class="body">
+                Atas partisipasi dan keikutsertaannya dalam kegiatan
+                <span class="program">${escapeHtml(program.title)}</span>
+                yang telah disetujui oleh admin.
+                <br />
+                Kategori: ${escapeHtml(program.category)} · Terdaftar: ${registeredDate}
+              </div>
+              <div class="footer">
+                <div>
+                  Diterbitkan pada<br />
+                  <strong>${issuedDate}</strong>
+                </div>
+                <div>
+                  Pembina / Admin<br />
+                  <div class="signature">Pramuka MAN 1 INHIL</div>
+                </div>
+              </div>
+            </section>
+          </main>
+        </body>
+      </html>
+    `);
+    certificateWindow.document.close();
+  };
+
   return (
     <GridList
       items={programs}
       empty="Belum ada program."
       render={(program) => {
-        const registration = registrations.find((item) => item.program_id === program.id);
+        const registration = registrations.find(
+          (item) => item.program_id === program.id,
+        );
         const status = registration?.status;
         const busy = actionBusy === `member-program-${program.id}`;
         const disabled = Boolean(status) || busy;
@@ -1426,16 +1844,47 @@ function MemberPrograms({
                   : "Daftar Kegiatan";
         return (
           <div style={{ ...cardStyle, padding: "18px" }}>
-            <div style={{ color: "#64748b", fontWeight: 800 }}>{program.category}</div>
-            <h3 style={{ margin: "6px 0", color: "#102033" }}>{program.title}</h3>
-            <p style={{ minHeight: "48px", color: "#475569" }}>{program.description}</p>
-            {status && <div style={{ marginBottom: "12px" }}><Badge status={status} /></div>}
+            <div style={{ color: "#64748b", fontWeight: 800 }}>
+              {program.category}
+            </div>
+            <h3 style={{ margin: "6px 0", color: "#102033" }}>
+              {program.title}
+            </h3>
+            <p style={{ minHeight: "48px", color: "#475569" }}>
+              {program.description}
+            </p>
+            {status && (
+              <div style={{ marginBottom: "12px" }}>
+                <Badge status={status} />
+              </div>
+            )}
             <ActionButton
               label={label}
               tone={disabled ? "neutral" : "primary"}
               onClick={() => !disabled && registerProgram(program.id)}
               disabled={disabled}
             />
+            {status === "accepted" && !registration?.certificate_approved && (
+              <p
+                style={{
+                  color: "#64748b",
+                  margin: "10px 0 0",
+                  fontSize: "0.86rem",
+                }}
+              >
+                Sertifikat belum tersedia. Menunggu admin menandai kegiatan
+                selesai.
+              </p>
+            )}
+            {status === "accepted" && registration?.certificate_approved && (
+              <div style={{ marginTop: "10px" }}>
+                <ActionButton
+                  label="Download Sertifikat"
+                  tone="success"
+                  onClick={() => openCertificate(program, registration)}
+                />
+              </div>
+            )}
           </div>
         );
       }}
@@ -1455,7 +1904,15 @@ function MemberAttendance({
   const busy = actionBusy === "member-attendance";
   return (
     <div style={{ display: "grid", gap: "16px" }}>
-      <div style={{ ...cardStyle, padding: "18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          ...cardStyle,
+          padding: "18px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <strong>Absensi Kegiatan</strong>
         <ActionButton
           label={busy ? "Mencatat..." : "Absen Hari Ini"}
@@ -1468,8 +1925,17 @@ function MemberAttendance({
         items={attendance}
         empty="Belum ada catatan absensi."
         render={(item) => (
-          <div style={{ ...cardStyle, padding: "16px", display: "flex", justifyContent: "space-between" }}>
-            <span>{new Date(item.attendance_date).toLocaleDateString("id-ID")}</span>
+          <div
+            style={{
+              ...cardStyle,
+              padding: "16px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <span>
+              {new Date(item.attendance_date).toLocaleDateString("id-ID")}
+            </span>
             <Badge status={item.status} />
           </div>
         )}
@@ -1481,17 +1947,29 @@ function MemberAttendance({
 function MemberLetters(props: {
   letters: LetterRequest[];
   letterForm: { letter_type: string; purpose: string; recipient: string };
-  setLetterForm: (value: { letter_type: string; purpose: string; recipient: string }) => void;
+  setLetterForm: (value: {
+    letter_type: string;
+    purpose: string;
+    recipient: string;
+  }) => void;
   submitLetter: (e: React.FormEvent) => void;
   actionBusy: string | null;
 }) {
   const busy = props.actionBusy === "member-letter";
   return (
     <div style={{ display: "grid", gap: "16px" }}>
-      <form onSubmit={props.submitLetter} style={{ ...cardStyle, padding: "18px", display: "grid", gap: "10px" }}>
+      <form
+        onSubmit={props.submitLetter}
+        style={{ ...cardStyle, padding: "18px", display: "grid", gap: "10px" }}
+      >
         <select
           value={props.letterForm.letter_type}
-          onChange={(e) => props.setLetterForm({ ...props.letterForm, letter_type: e.target.value })}
+          onChange={(e) =>
+            props.setLetterForm({
+              ...props.letterForm,
+              letter_type: e.target.value,
+            })
+          }
           style={fieldStyle}
         >
           <option value="Surat Izin">Surat Izin</option>
@@ -1500,13 +1978,23 @@ function MemberLetters(props: {
         </select>
         <input
           value={props.letterForm.recipient}
-          onChange={(e) => props.setLetterForm({ ...props.letterForm, recipient: e.target.value })}
+          onChange={(e) =>
+            props.setLetterForm({
+              ...props.letterForm,
+              recipient: e.target.value,
+            })
+          }
           placeholder="Tujuan surat"
           style={fieldStyle}
         />
         <input
           value={props.letterForm.purpose}
-          onChange={(e) => props.setLetterForm({ ...props.letterForm, purpose: e.target.value })}
+          onChange={(e) =>
+            props.setLetterForm({
+              ...props.letterForm,
+              purpose: e.target.value,
+            })
+          }
           placeholder="Keperluan"
           required
           style={fieldStyle}
@@ -1545,7 +2033,11 @@ function GridList<T>({
   empty: string;
 }) {
   if (!items.length) {
-    return <div style={{ ...cardStyle, padding: "28px", color: "#64748b" }}>{empty}</div>;
+    return (
+      <div style={{ ...cardStyle, padding: "28px", color: "#64748b" }}>
+        {empty}
+      </div>
+    );
   }
   return (
     <div
@@ -1618,7 +2110,16 @@ const adminLabelStyle: React.CSSProperties = {
 
 function resolveImageUrl(url: string) {
   if (url.startsWith("/uploads")) {
-    return isLocalhost ? `http://localhost:8000${url}` : url;
+    return isLocalhost ? `${API_BASE_URL}${url}` : url;
   }
   return url;
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }

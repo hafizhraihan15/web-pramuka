@@ -92,6 +92,7 @@ class ProgramRegistration(Base):
     member_id    = Column(Integer, ForeignKey("members.id"), nullable=False)
     program_id   = Column(Integer, ForeignKey("programs.id"), nullable=False)
     status       = Column(Enum("pending", "accepted", "rejected"), default="pending")
+    certificate_approved = Column(Boolean, default=False)
     registered_at = Column(DateTime, server_default=func.now())
     __table_args__ = (UniqueConstraint('member_id', 'program_id', name='unique_registration'),)
 

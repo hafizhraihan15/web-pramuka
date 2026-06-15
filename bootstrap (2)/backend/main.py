@@ -27,6 +27,14 @@ def apply_lightweight_migrations():
                     "ADD COLUMN status ENUM('pending','accepted','rejected') DEFAULT 'pending'"
                 )
             )
+    if "certificate_approved" not in columns:
+        with engine.begin() as conn:
+            conn.execute(
+                text(
+                    "ALTER TABLE program_registrations "
+                    "ADD COLUMN certificate_approved BOOLEAN DEFAULT FALSE"
+                )
+            )
 
 
 apply_lightweight_migrations()

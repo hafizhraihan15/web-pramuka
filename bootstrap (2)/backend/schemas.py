@@ -149,6 +149,7 @@ class ProgramRegistrationOut(BaseModel):
     member_id: int
     program_id: int
     status: str
+    certificate_approved: bool = False
     registered_at: datetime
     model_config = {"from_attributes": True}
 

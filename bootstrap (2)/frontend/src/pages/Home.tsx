@@ -11,7 +11,8 @@ import { MdAccessTime, MdEmail, MdLocationOn } from "react-icons/md";
 const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(
   window.location.hostname,
 );
-const API_URL = isLocalhost ? "http://localhost:8000/api" : "/api";
+const API_BASE_URL = isLocalhost ? "http://localhost:8001" : "";
+const API_URL = `${API_BASE_URL}/api`;
 
 interface Announcement {
   id: number;
@@ -98,13 +99,13 @@ export const Home: React.FC = () => {
     },
     {
       id: 2,
-      name: "Najwa Hul Gusri",
+      name: "Najwa Hulgusri",
       role: "Front-end Dev",
       image: "/img/najwa.jpeg",
     },
     {
       id: 3,
-      name: "Salma Dita Khairunnisa",
+      name: "Salma Dita Khairunnisa", 
       role: "UI/UX Designer",
       image: "/img/salma.jpeg",
     },
@@ -769,7 +770,7 @@ export const Home: React.FC = () => {
                         <img
                           src={
                             a.image_url.startsWith("/uploads")
-                              ? `http://localhost:8000${a.image_url}`
+                              ? `${API_BASE_URL}${a.image_url}`
                               : a.image_url
                           }
                           alt={a.title}
@@ -1226,7 +1227,7 @@ export const Home: React.FC = () => {
                   <img
                     src={
                       item.image_url.startsWith("/uploads")
-                        ? `http://localhost:8000${item.image_url}`
+                        ? `${API_BASE_URL}${item.image_url}`
                         : item.image_url
                     }
                     alt={item.title}
@@ -1302,7 +1303,7 @@ export const Home: React.FC = () => {
             <img
               src={
                 gallery[lightboxIndex].image_url.startsWith("/uploads")
-                  ? `http://localhost:8000${gallery[lightboxIndex].image_url}`
+                  ? `${API_BASE_URL}${gallery[lightboxIndex].image_url}`
                   : gallery[lightboxIndex].image_url
               }
               alt={gallery[lightboxIndex].title}

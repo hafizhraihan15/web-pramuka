@@ -6,7 +6,8 @@ import { useToast } from "../components/ToastContext";
 const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(
   window.location.hostname,
 );
-const API_URL = isLocalhost ? "http://localhost:8000/api" : "/api";
+const API_BASE_URL = isLocalhost ? "http://localhost:8001" : "";
+const API_URL = `${API_BASE_URL}/api`;
 
 type Mode = "login" | "register";
 

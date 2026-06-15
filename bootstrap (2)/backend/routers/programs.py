@@ -60,6 +60,7 @@ def get_all_program_registrations(db: Session = Depends(get_db), current_user=De
             "program_id": program.id,
             "program_title": program.title,
             "status": registration.status,
+            "certificate_approved": registration.certificate_approved,
             "registered_at": registration.registered_at,
         }
         for registration, member, program in rows
@@ -76,6 +77,24 @@ def update_program_registration_status(
     if not registration:
         raise HTTPException(404, "Pendaftaran program tidak ditemukan")
     registration.status = body.status
+    if body.status != "accepted":
+        registration.certificate_approved = False
+    db.commit()
+    db.refresh(registration)
+    return registration
+
+@router.patch("/registrations/{registration_id}/certificate", response_model=schemas.ProgramRegistrationOut)
+def approve_program_certificate(
+    registration_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(auth_utils.get_current_admin),
+):
+    registration = db.query(models.ProgramRegistration).filter(models.ProgramRegistration.id == registration_id).first()
+    if not registration:
+        raise HTTPException(404, "Pendaftaran program tidak ditemukan")
+    if registration.status != "accepted":
+        raise HTTPException(400, "Sertifikat hanya bisa disetujui untuk peserta yang sudah diterima")
+    registration.certificate_approved = True
     db.commit()
     db.refresh(registration)
     return registration
@@ -106,6 +125,7 @@ def get_member_program_registrations(
             "program_id": program.id,
             "program_title": program.title,
             "status": registration.status,
+            "certificate_approved": registration.certificate_approved,
             "registered_at": registration.registered_at,
         }
         for registration, program in rows
