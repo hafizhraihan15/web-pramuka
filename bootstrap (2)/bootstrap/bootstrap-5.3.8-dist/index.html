@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Website resmi Gerakan Pramuka Gugus Depan MAN 1 Indragiri Hilir. Membentuk generasi muda yang tangguh, berakhlak, dan berprestasi."
+    />
+    <meta
+      name="keywords"
+      content="Pramuka MAN 1 INHIL, Pramuka Indragiri Hilir, Gugus Depan, Pramuka Riau"
+    />
+    <meta name="author" content="Hafizh Raihan" />
+    <meta
+      property="og:title"
+      content="Pramuka MAN 1 INHIL — Sedia, Waspada, Kesatria"
+    />
+    <meta
+      property="og:description"
+      content="Gerakan Pramuka Gugus Depan MAN 1 Indragiri Hilir"
+    />
+    <title>Pramuka MAN 1 INHIL — Sedia, Waspada, Kesatria</title>
+    <link rel="icon" type="image/png" href="img/logo.png" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- ======== LOADER SCREEN ======== -->
+    <div id="loader-screen">
+      <div class="loader-logo">
+        <img src="img/logo.png" alt="Logo Pramuka MAN 1 INHIL" />
+      </div>
+      <div class="loader-text">MEMUAT HALAMAN...</div>
+      <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    </div>
+
+    <!-- ======== TOAST CONTAINER ======== -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNavbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+          <span class="logo-container">
+            <img src="img/logo.png" alt="Logo" class="nav-logo" />
+          </span>
+          <span class="fw-bold text-uppercase" style="font-size: 0.95rem"
+            >PRAMUKA MAN 1 INHIL</span
+          >
+        </a>
+        <button
+          class="navbar-toggler border-0"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center gap-1">
+            <li class="nav-item">
+              <a class="nav-link active" href="#beranda" id="nav-beranda"
+                >Beranda</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#pengumuman" id="nav-pengumuman"
+                >Pengumuman</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tentang" id="nav-tentang">Tentang</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#program" id="nav-program">Program</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gallery" id="nav-gallery">Galeri</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#daftar" id="nav-daftar">Daftar</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#kontak" id="nav-kontak">Kontak</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======== HERO SECTION ======== -->
+    <section class="hero-section" id="beranda">
+      <div id="hero-bg"></div>
+      <div id="twinkle-stars"></div>
+
+      <!-- Aurora effect -->
+      <div class="aurora-bg">
+        <div class="aurora-1"></div>
+        <div class="aurora-2"></div>
+        <div class="aurora-3"></div>
+      </div>
+
+      <!-- Geometric rings (right only) -->
+      <div class="hero-geo" style="bottom: 15%; right: 5%; opacity: 0.25">
+        <div class="geo-ring-2"></div>
+      </div>
+
+      <!-- Two-column hero layout -->
+      <div class="hero-wrapper">
+        <!-- LEFT: Main content -->
+        <div class="hero-left">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Gugus Depan 15-009 dan 15-010
+          </div>
+          <h1 class="hero-title">
+            <span class="highlight">Sedia,</span> Waspada,<br />Kesatria
+          </h1>
+          <p class="hero-subtitle">Gerakan Pramuka MAN 1 Indragiri Hilir</p>
+          <p class="hero-typing" id="typing-text">
+            <span id="typed-output"></span><span class="cursor">|</span>
+          </p>
+          <div class="hero-buttons">
+            <a href="#tentang" class="btn-hero-primary">✨ Profil Kami</a>
+            <a href="#daftar" class="btn-hero-outline">📝 Daftar Sekarang</a>
+          </div>
+        </div>
+
+        <!-- RIGHT: Stats panel -->
+        <div class="hero-right">
+          <div class="hero-stats-panel">
+            <div class="hero-stat-item">
+              <div class="hero-stat-number" data-target="150">0</div>
+              <div class="hero-stat-label">ANGGOTA<br />AKTIF</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-number" data-target="50">0</div>
+              <div class="hero-stat-label">PRESTASI</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-number" data-target="10">0</div>
+              <div class="hero-stat-label">PROGRAM/<br />TAHUN</div>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <div class="hero-stat-number" data-target="49">0</div>
+              <div class="hero-stat-label">TAHUN<br />BERDIRI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="scroll-indicator">
+        <div class="scroll-mouse">
+          <div class="scroll-wheel"></div>
+        </div>
+        <span class="scroll-text">SCROLL</span>
+      </div>
+    </section>
+
+    <!-- ======== PENGUMUMAN SECTION ======== -->
+    <section id="pengumuman" class="section-padding annc-section">
+      <div class="container">
+        <div class="text-center mb-5 reveal">
+          <span class="section-badge">📢 Info Terkini</span>
+          <h2 class="section-title">Pengumuman & Berita</h2>
+          <div class="section-divider mx-auto"></div>
+          <p class="mt-3 text-muted">
+            Informasi kegiatan dan pendaftaran terbaru dari Pramuka MAN 1 INHIL
+          </p>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="annc-grid reveal" id="annc-grid">
+          <!-- Skeleton loaders -->
+          <div class="annc-card annc-skeleton"></div>
+          <div class="annc-card annc-skeleton"></div>
+          <div class="annc-card annc-skeleton"></div>
+        </div>
+
+        <!-- Empty state (hidden by default) -->
+        <div id="annc-empty" style="display: none" class="text-center py-5">
+          <div style="font-size: 3.5rem; margin-bottom: 16px; opacity: 0.4">
+            📭
+          </div>
+          <p class="text-muted">Belum ada pengumuman saat ini.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TENTANG SECTION ======== -->
+    <section id="tentang" class="section-padding">
+      <div class="container">
+        <!-- Row 1: Profile text + Carousel, side by side, vertically centered -->
+        <div class="row g-5 align-items-center mb-5">
+          <div class="col-lg-6 reveal-left">
+            <span class="section-badge">Profil Organisasi</span>
+            <h2 class="section-title">
+              Membentuk Karakter<br />Generasi Muda Unggul
+            </h2>
+            <div class="section-divider" style="margin: 16px 0 28px"></div>
+            <p
+              class="text-muted mb-4"
+              style="line-height: 1.9; font-size: 0.97rem"
+            >
+              Gerakan Pramuka MAN 1 INHIL berfokus pada pengembangan diri,
+              kepemimpinan, dan pengabdian masyarakat berdasarkan nilai-nilai
+              <strong>Tri Satya</strong> dan <strong>Dasa Darma</strong>. Kami
+              aktif dalam berbagai kegiatan dari tingkat gugus depan hingga
+              nasional.
+            </p>
+
+            <!-- Nilai-nilai -->
+            <div class="row g-3 mb-4">
+              <div class="col-6">
+                <div class="value-card">
+                  <span class="value-icon">⚜️</span>
+                  <div class="value-title">Tri Satya</div>
+                  <div class="value-desc">Janji setia seorang Pramuka</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="value-card">
+                  <span class="value-icon">🌟</span>
+                  <div class="value-title">Dasa Darma</div>
+                  <div class="value-desc">10 ketentuan moral Pramuka</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="value-card">
+                  <span class="value-icon">🤝</span>
+                  <div class="value-title">Persaudaraan</div>
+                  <div class="value-desc">Silih asah, asuh, asih</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="value-card">
+                  <span class="value-icon">🏆</span>
+                  <div class="value-title">Prestasi</div>
+                  <div class="value-desc">45+ prestasi tingkat regional</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3 flex-wrap">
+              <a href="#program" class="btn-outline-primary"
+                >Lihat Program Kami →</a
+              >
+              <a href="#gallery" class="btn-outline-primary"
+                >Galeri Kegiatan 📸</a
+              >
+            </div>
+          </div>
+
+          <div class="col-lg-6 reveal-right">
+            <!-- Foto Carousel -->
+            <div
+              id="carouselTentang"
+              class="carousel slide shadow-lg rounded-4 overflow-hidden"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-indicators">
+                <button
+                  type="button"
+                  data-bs-target="#carouselTentang"
+                  data-bs-slide-to="0"
+                  class="active"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#carouselTentang"
+                  data-bs-slide-to="1"
+                ></button>
+                <button
+                  type="button"
+                  data-bs-target="#carouselTentang"
+                  data-bs-slide-to="2"
+                ></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="3500">
+                  <img
+                    src="img/foto1.jpeg"
+                    class="d-block w-100 carousel-img"
+                    alt="Latihan Mingguan"
+                  />
+                  <div
+                    class="carousel-caption d-none d-md-block bg-dark-overlay"
+                  >
+                    <h5>Latihan Mingguan</h5>
+                    <p>Kedisiplinan adalah kunci utama kami.</p>
+                  </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="3500">
+                  <img
+                    src="img/foto2.jpeg"
+                    class="d-block w-100 carousel-img"
+                    alt="Perkemahan"
+                  />
+                  <div
+                    class="carousel-caption d-none d-md-block bg-dark-overlay"
+                  >
+                    <h5>Perkemahan Sabtu Minggu</h5>
+                    <p>Membangun kemandirian di alam terbuka.</p>
+                  </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="3500">
+                  <img
+                    src="img/foto3.jpeg"
+                    class="d-block w-100 carousel-img"
+                    alt="Bakti Masyarakat"
+                  />
+                  <div
+                    class="carousel-caption d-none d-md-block bg-dark-overlay"
+                  >
+                    <h5>Bakti Masyarakat</h5>
+                    <p>Silih asah, silih asuh, silih asih.</p>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#carouselTentang"
+                data-bs-slide="prev"
+              >
+                <span class="carousel-control-prev-icon"></span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#carouselTentang"
+                data-bs-slide="next"
+              >
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Timeline Sejarah Singkat (full-width) -->
+        <div class="reveal">
+          <div class="timeline-section-header">
+            <h4 class="fw-bold" style="color: var(--navy-dark)">
+              📅 Sejarah Singkat
+            </h4>
+            <p class="text-muted" style="font-size: 0.9rem">
+              Perjalanan panjang menuju kejayaan
+            </p>
+          </div>
+          <div class="row g-4 mt-2">
+            <div class="col-md-3 col-sm-6">
+              <div class="timeline-card">
+                <div class="timeline-card-icon">🏕️</div>
+                <div class="timeline-card-year">2018</div>
+                <div class="timeline-card-title">Pendirian Gugus Depan</div>
+                <div class="timeline-card-desc">
+                  Gugus Depan 04.055–04.056 resmi dibentuk di MAN 1 INHIL.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="timeline-card">
+                <div class="timeline-card-icon">🥇</div>
+                <div class="timeline-card-year">2020</div>
+                <div class="timeline-card-title">Prestasi Pertama</div>
+                <div class="timeline-card-desc">
+                  Juara 1 Lomba Tingkat III se-Kabupaten Indragiri Hilir.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="timeline-card">
+                <div class="timeline-card-icon">🌟</div>
+                <div class="timeline-card-year">2023</div>
+                <div class="timeline-card-title">Jambore Nasional</div>
+                <div class="timeline-card-desc">
+                  Pertama kali mengirimkan utusan ke Jambore Nasional.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="timeline-card">
+                <div class="timeline-card-icon">🚀</div>
+                <div class="timeline-card-year">2026</div>
+                <div class="timeline-card-title">Era Digital</div>
+                <div class="timeline-card-desc">
+                  Peluncuran website resmi dan digitalisasi sistem organisasi.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== PROGRAM SECTION ======== -->
+    <section id="program" class="section-padding">
+      <div class="container-fluid px-4 px-lg-5">
+        <div class="text-center mb-5 reveal">
+          <span class="section-badge light">Aktivitas Kami</span>
+          <h2 class="section-title text-white">Program Unggulan</h2>
+          <div class="section-divider mx-auto"></div>
+          <p class="mt-3 text-white-50">
+            Semua program dirancang untuk membentuk karakter dan keterampilan
+            anggota
+          </p>
+        </div>
+
+        <!-- Filter -->
+        <div class="program-filter-wrap reveal">
+          <button class="prog-filter-btn active" data-filter="all">
+            Semua
+          </button>
+          <button class="prog-filter-btn" data-filter="Rutin">Rutin</button>
+          <button class="prog-filter-btn" data-filter="Tahunan">Tahunan</button>
+          <button class="prog-filter-btn" data-filter="Prestasi">
+            Prestasi
+          </button>
+        </div>
+
+        <!-- Program Cards -->
+        <div class="program-grid" id="program-grid">
+          <!-- Skeleton loaders -->
+          <div class="program-card">
+            <div style="opacity: 0.3; text-align: center">
+              <div
+                class="skeleton"
+                style="
+                  height: 3.5rem;
+                  width: 3.5rem;
+                  border-radius: 50%;
+                  margin: 0 auto 16px;
+                "
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 20px; margin-bottom: 12px; border-radius: 8px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 60px; border-radius: 8px"
+              ></div>
+            </div>
+          </div>
+          <div class="program-card" style="opacity: 0.7">
+            <div style="opacity: 0.3; text-align: center">
+              <div
+                class="skeleton"
+                style="
+                  height: 3.5rem;
+                  width: 3.5rem;
+                  border-radius: 50%;
+                  margin: 0 auto 16px;
+                "
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 20px; margin-bottom: 12px; border-radius: 8px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 60px; border-radius: 8px"
+              ></div>
+            </div>
+          </div>
+          <div class="program-card" style="opacity: 0.4">
+            <div style="opacity: 0.3; text-align: center">
+              <div
+                class="skeleton"
+                style="
+                  height: 3.5rem;
+                  width: 3.5rem;
+                  border-radius: 50%;
+                  margin: 0 auto 16px;
+                "
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 20px; margin-bottom: 12px; border-radius: 8px"
+              ></div>
+              <div
+                class="skeleton"
+                style="height: 60px; border-radius: 8px"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== GALLERY SECTION ======== -->
+    <section id="gallery" class="section-padding">
+      <div class="container">
+        <div class="text-center mb-5 reveal">
+          <span class="section-badge">Dokumentasi</span>
+          <h2 class="section-title">Galeri Kegiatan</h2>
+          <div class="section-divider mx-auto"></div>
+          <p class="mt-3 text-muted">
+            Dokumentasi berbagai kegiatan dan momen berharga kami
+          </p>
+        </div>
+
+        <!-- Filter -->
+        <div class="gallery-filter-wrap reveal">
+          <button class="gal-filter-btn active" data-filter="all">
+            🌐 Semua
+          </button>
+          <button class="gal-filter-btn" data-filter="Kemah">🏕️ Kemah</button>
+          <button class="gal-filter-btn" data-filter="Lomba">🏆 Lomba</button>
+          <button class="gal-filter-btn" data-filter="Bakti Sosial">
+            🤝 Bakti Sosial
+          </button>
+          <button class="gal-filter-btn" data-filter="Latihan">
+            💪 Latihan
+          </button>
+          <button class="gal-filter-btn" data-filter="Acara">🎉 Acara</button>
+        </div>
+
+        <!-- Masonry Grid -->
+        <div class="masonry-grid" id="gallery-grid">
+          <div
+            class="gallery-empty"
+            style="text-align: center; width: 100%; grid-column: 1/-1"
+          >
+            <div class="icon">🖼️</div>
+            <p>Memuat galeri...</p>
+          </div>
+        </div>
+
+        <!-- Load more -->
+        <div
+          class="text-center mt-5"
+          id="gallery-load-more-wrap"
+          style="display: none"
+        >
+          <button
+            class="btn-outline-primary"
+            id="btn-load-more-gallery"
+            onclick="loadMoreGallery()"
+          >
+            📂 Muat Lebih Banyak
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox-overlay" id="lightbox">
+      <button class="lightbox-close" id="lightbox-close">✕</button>
+      <button class="lightbox-nav lightbox-prev" id="lightbox-prev">‹</button>
+      <div class="lightbox-container">
+        <img src="" alt="" class="lightbox-img" id="lightbox-img" />
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+      <button class="lightbox-nav lightbox-next" id="lightbox-next">›</button>
+    </div>
+
+    <!-- ======== PENDAFTARAN SECTION ======== -->
+    <section id="daftar" class="section-padding">
+      <div class="container">
+        <div class="text-center mb-5 reveal">
+          <span class="section-badge light">Bergabung Bersama Kami</span>
+          <h2 class="section-title text-white">Daftar Jadi Anggota</h2>
+          <div class="section-divider mx-auto"></div>
+          <p class="mt-3 text-white-50">
+            Isi form di bawah ini untuk mendaftar sebagai anggota Pramuka MAN 1
+            INHIL
+          </p>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-8 reveal">
+            <div class="form-card">
+              <form id="form-daftar" enctype="multipart/form-data">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Nama Lengkap <span class="text-gold">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="name"
+                      id="daftar-name"
+                      placeholder="Nama lengkap kamu"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label"
+                      >Kelas <span class="text-gold">*</span></label
+                    >
+                    <select
+                      class="form-select"
+                      name="class"
+                      id="daftar-class"
+                      required
+                    >
+                      <option value="">-- Pilih Kelas --</option>
+                      <option>X IPA 1</option>
+                      <option>X IPA 2</option>
+                      <option>X IPA 3</option>
+                      <option>X IPS 1</option>
+                      <option>X IPS 2</option>
+                      <option>X IPS 3</option>
+                      <option>XI IPA 1</option>
+                      <option>XI IPA 2</option>
+                      <option>XI IPS 1</option>
+                      <option>XII IPA 1</option>
+                      <option>XII IPA 2</option>
+                      <option>XII IPS 1</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">No. WhatsApp</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      name="phone"
+                      id="daftar-phone"
+                      placeholder="08xxxxxxxxxx"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Alamat</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="address"
+                      id="daftar-address"
+                      placeholder="Alamat tempat tinggal"
+                    />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Motivasi Bergabung</label>
+                    <textarea
+                      class="form-control"
+                      name="motivation"
+                      id="daftar-motivation"
+                      rows="3"
+                      placeholder="Ceritakan mengapa kamu ingin bergabung..."
+                    ></textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Foto (opsional)</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      name="photo"
+                      id="daftar-photo"
+                      accept="image/*"
+                    />
+                    <small
+                      style="
+                        color: rgba(255, 255, 255, 0.45);
+                        font-size: 0.8rem;
+                      "
+                      >Format: JPG, PNG. Maks 5MB</small
+                    >
+                  </div>
+                  <div class="col-12 mt-2">
+                    <button type="submit" class="btn-submit" id="btn-daftar">
+                      📝 Kirim Pendaftaran
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== KONTAK SECTION ======== -->
+    <section id="kontak" class="section-padding">
+      <div class="container">
+        <div class="text-center mb-5 reveal">
+          <span class="section-badge">Hubungi Kami</span>
+          <h2 class="section-title">Ada Pertanyaan?</h2>
+          <div class="section-divider mx-auto"></div>
+        </div>
+
+        <div class="row g-5">
+          <!-- Info Kontak -->
+          <div class="col-lg-5 reveal-left">
+            <div class="contact-card h-100">
+              <h4 class="fw-bold mb-4" style="color: var(--navy-dark)">
+                Informasi Kontak
+              </h4>
+              <div class="contact-info-item">
+                <div class="contact-icon">📍</div>
+                <div>
+                  <div class="fw-600">Alamat</div>
+                  <div class="text-muted" style="font-size: 0.875rem">
+                    Jl. Pendidikan, MAN 1 Indragiri Hilir,<br />Tembilahan, Riau
+                  </div>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <div class="contact-icon">📱</div>
+                <div>
+                  <div class="fw-600">WhatsApp</div>
+                  <div class="text-muted" style="font-size: 0.875rem">
+                    +62 853-8949-6882
+                  </div>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <div class="contact-icon">📧</div>
+                <div>
+                  <div class="fw-600">Email</div>
+                  <div class="text-muted" style="font-size: 0.875rem">
+                    pramuka@man1inhil.sch.id
+                  </div>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <div class="contact-icon">🕐</div>
+                <div>
+                  <div class="fw-600">Jam Aktif</div>
+                  <div class="text-muted" style="font-size: 0.875rem">
+                    Senin – Sabtu: 08.00 – 16.00 WIB
+                  </div>
+                </div>
+              </div>
+              <!-- Social Media -->
+              <div class="social-links mt-4">
+                <a
+                  href="https://instagram.com/pramukaman1inhil"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-btn social-ig"
+                  title="Instagram @pramukaman1inhil"
+                  >📸</a
+                >
+                <a
+                  href="https://wa.me/6285389496882"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-btn social-wa"
+                  title="WhatsApp 085389496882"
+                  >💬</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Kontak -->
+          <div class="col-lg-7 reveal-right">
+            <div class="contact-card h-100">
+              <h4 class="fw-bold mb-4" style="color: var(--navy-dark)">
+                Kirim Pesan
+              </h4>
+              <form id="form-kontak">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted">Nama Lengkap</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="name"
+                      id="kontak-name"
+                      placeholder="Nama kamu"
+                      required
+                      style="
+                        background: var(--gray-50) !important;
+                        color: var(--gray-800) !important;
+                        border: 1px solid var(--gray-200) !important;
+                      "
+                    />
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      name="email"
+                      id="kontak-email"
+                      placeholder="email@kamu.com"
+                      required
+                      style="
+                        background: var(--gray-50) !important;
+                        color: var(--gray-800) !important;
+                        border: 1px solid var(--gray-200) !important;
+                      "
+                    />
+                  </div>
+                  <!-- Penutup col-md-6 Email -->
+
+                  <div class="col-12 mb-3">
+                    <label class="form-label text-muted">Pesan</label>
+                    <textarea
+                      class="form-control"
+                      name="message"
+                      id="kontak-message"
+                      rows="5"
+                      placeholder="Tulis pesanmu di sini..."
+                      required
+                      style="
+                        background: var(--gray-50) !important;
+                        color: var(--gray-800) !important;
+                        border: 1px solid var(--gray-200) !important;
+                      "
+                    >
+                    </textarea>
+                  </div>
+
+                  <div class="col-12">
+                    <button
+                      type="submit"
+                      class="btn-primary w-100"
+                      id="btn-kontak"
+                      style="padding: 14px"
+                    >
+                      📨 Kirim Pesan Sekarang
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer>
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="footer-brand">
+              <div class="footer-logo">
+                <img src="img/logo.png" alt="Logo" class="footer-logo-img" />
+                <span class="footer-logo-text">PRAMUKA MAN 1 INHIL</span>
+              </div>
+              <p class="footer-desc">
+                Gugus Depan 04.055 – 04.056 MAN 1 Indragiri Hilir. Membentuk
+                generasi muda yang tangguh, berakhlak, dan berprestasi
+                berdasarkan nilai-nilai Tri Satya dan Dasa Darma.
+              </p>
+              <div class="social-links mt-3">
+                <a
+                  href="https://instagram.com/pramukaman1inhil"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-btn social-ig"
+                  title="Instagram"
+                  >📸</a
+                >
+                <a
+                  href="https://wa.me/6285389496882"
+                  target="_blank"
+                  rel="noopener"
+                  class="social-btn social-wa"
+                  title="WhatsApp"
+                  >💬</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-6">
+            <div class="footer-title">Navigasi</div>
+            <ul class="footer-links">
+              <li><a href="#beranda">Beranda</a></li>
+              <li><a href="#tentang">Tentang</a></li>
+              <li><a href="#program">Program</a></li>
+              <li><a href="#gallery">Galeri</a></li>
+              <li><a href="#daftar">Daftar</a></li>
+              <li><a href="#kontak">Kontak</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="footer-title">Program</div>
+            <ul class="footer-links">
+              <li><a href="#program">🤝 Bakti Sosial</a></li>
+              <li><a href="#program">🏕️ Latihan Rutin</a></li>
+              <li><a href="#program">🔥 Kemah Tahunan</a></li>
+              <li><a href="#program">⚜️ Pramuka Garuda</a></li>
+              <li><a href="#program">🏆 Lomba Tingkat</a></li>
+              <li><a href="#program">🌍 Jambore</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3">
+            <div class="footer-title">Kontak</div>
+            <ul class="footer-links">
+              <li><a href="#">📍 Tembilahan, Riau</a></li>
+              <li>
+                <a href="https://wa.me/6285389496882" target="_blank"
+                  >📱 +62 853-8949-6882</a
+                >
+              </li>
+              <li><a href="#">📧 pramuka@man1inhil.sch.id</a></li>
+              <li><a href="#">🕐 Senin – Sabtu, 08:00–16:00</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="footer-divider" />
+        <div class="footer-bottom">
+          <span class="footer-copy"
+            >© 2026 <strong>Pramuka MAN 1 INHIL</strong>. All Rights
+            Reserved.</span
+          >
+          <span class="footer-credit"
+            >Dibuat dengan ❤️ oleh <a href="#">TIM WEB GACOR</a></span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- ======== MODAL PROGRAM DETAIL ======== -->
+    <div class="modal fade" id="programModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="programModalTitle">Detail Program</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="programModalBody">
+            <div class="prog-modal-icon" id="modal-prog-icon">🏕️</div>
+            <div class="text-center mb-3">
+              <span class="prog-modal-cat" id="modal-prog-cat">Kategori</span>
+            </div>
+            <p id="modal-prog-desc" class="text-muted"></p>
+            <div
+              class="program-schedule"
+              id="modal-prog-schedule"
+              style="color: var(--navy-dark); justify-content: flex-start"
+            ></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn-outline-primary"
+              data-bs-dismiss="modal"
+            >
+              Tutup
+            </button>
+            <a
+              href="#daftar"
+              class="btn-primary"
+              data-bs-dismiss="modal"
+              style="padding: 10px 24px; text-decoration: none"
+              >Daftar Sekarang</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/gallery.js"></script>
+  </body>
+</html>
